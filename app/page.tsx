@@ -1,94 +1,64 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import MediaCard from "./components/MediaCard";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main /*className={styles.main}*/>
+      <header style={{height: "50px"}}>Jess Anthony</header>
+      <div style={{display: "flex", flexDirection: "column", justifyContent: "start"}}>
+        <div style={{height: "50vh", width: "100%", backgroundColor: "lightgray"}}> img </div>
+        <div style={{display: "flex", justifyContent: "center", flexDirection: "row", padding: "10px"}}>
+          <div>
+            <h1>Kanye West Love Lockdown Kendrick Lamar The Recipe</h1>
+            <p>By Jesse Anthony</p>
+          </div>
+          <div style={{display: "flex", flexDirection: "column"}}>
+            <div>Play</div>
+            <div>Download</div>
+          </div>
         </div>
+
+
+        {/* Track List */}
+        <div style={{display: "flex", flexDirection: "column", gap: "10px", marginTop: "10px", padding: "10px"}}>
+          <MediaCard></MediaCard>
+          <MediaCard></MediaCard>
+          <MediaCard></MediaCard>
+        </div>
+
       </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      
+      {/* Footer */}
+      <div style={{position: "fixed", bottom: 0, left: 0, backgroundColor: "#3f3f3f", zIndex: 1000, width: "100%"}}>
+        <div>Player</div>
+        <div style={{display: "flex", flexDirection: "row", justifyContent: "space-around", alignItems: "center", gap: "15px"}}>
+          <Image 
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1gIDEAoQm7jyggAAAAh0RVh0Q29tbWVudAD2zJa/AAAAFElEQVR42mP8//8/AxJgYkAFpPIB6vYDB8ciUl8AAAAASUVORK5CYII=" 
+            alt="Album Art" 
+            width={40} 
+            height={40}
+          />
+          <Image 
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1gIDEAoQm7jyggAAAAh0RVh0Q29tbWVudAD2zJa/AAAAFElEQVR42mP8//8/AxJgYkAFpPIB6vYDB8ciUl8AAAAASUVORK5CYII=" 
+            alt="Album Art" 
+            width={40} 
+            height={40}
+          />
+          <Image 
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1gIDEAoQm7jyggAAAAh0RVh0Q29tbWVudAD2zJa/AAAAFElEQVR42mP8//8/AxJgYkAFpPIB6vYDB8ciUl8AAAAASUVORK5CYII=" 
+            alt="Album Art" 
+            width={40} 
+            height={40}
+          />
+          <Image 
+            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1gIDEAoQm7jyggAAAAh0RVh0Q29tbWVudAD2zJa/AAAAFElEQVR42mP8//8/AxJgYkAFpPIB6vYDB8ciUl8AAAAASUVORK5CYII=" 
+            alt="Album Art" 
+            width={40} 
+            height={40}
+          />
+        </div>
       </div>
     </main>
   );
