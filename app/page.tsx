@@ -1,6 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { ReactQueryProvider } from "./providers/ReactQueryProvider";
-import Home from "./components/home";
+import Home from "./components/Home";
+import { AudioProvider } from "./providers/AudioProvider";
 
 // Gets track list from pg database
 async function fetchData() {
@@ -14,7 +15,13 @@ export default async function Page() {
 
   return (
     <ReactQueryProvider>
-      <Home data={data} />
+      <AudioProvider
+        audioUrl={
+          "https://eldor.s3.us-west-1.amazonaws.com/Kanye_West_Love_Lockdown_Kendrick_Lamar_The_Recipe.mp3.mp3"
+        }
+      >
+        <Home data={data} />
+      </AudioProvider>
     </ReactQueryProvider>
   );
 }
