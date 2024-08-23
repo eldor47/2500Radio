@@ -1,5 +1,5 @@
 interface Track {
-  trackName: string;
-  trackLink: string;
-  trackImg: string;
+  trackname: string;
+  tracklink: string;
+  trackimg: string;
 }

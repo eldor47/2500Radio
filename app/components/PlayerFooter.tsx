@@ -5,15 +5,15 @@ const PlayerFooter = (props: { currentTrack: Track }) => {
   return (
     <div className={styles.mediaCard}>
       <Image
-        src={props.currentTrack.trackImg}
+        src={props.currentTrack.trackimg}
         alt="Album Art"
         width={70}
         height={70}
         className={styles.image}
       />
       <div className={styles.mediaInfo}>
-        <h4>{props.currentTrack.trackName}</h4>
-        <p>{props.currentTrack.trackName}</p>
+        <h4>{props.currentTrack.trackname}</h4>
+        <p>{props.currentTrack.trackname}</p>
       </div>
       <div
         style={{
