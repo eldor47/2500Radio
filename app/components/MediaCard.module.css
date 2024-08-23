@@ -1,36 +1,35 @@
 .mediaCard {
-    display: flex;
-    align-items: center;
-    background-color: #1f1f1f;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 600px;
-    margin: auto;
-    overflow: hidden;
-  }
-  
-  .image {
-    border-radius: 10px;
-    object-fit: cover;
-  }
-  
-  .mediaInfo {
-    margin-left: 15px;
-    flex-grow: 1;
-  }
-  
-  .mediaInfo h4 {
-    margin: 0;
-    font-size: 18px;
-  }
-  
-  .mediaInfo p {
-    margin: 5px 0 0;
-    font-size: 14px;
-    color: #aaa;
-  }
-  
-  .mediaInfo span {
-    font-size: 12px;
-    color: #666;
-  }
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  border-radius: 10px;
+  margin: auto;
+  overflow: hidden;
+}
+
+.image {
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.mediaInfo {
+  margin-left: 15px;
+  flex-grow: 1;
+}
+
+.mediaInfo h4 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.mediaInfo p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #aaa;
+}
+
+.mediaInfo span {
+  font-size: 12px;
+  color: #666;
+}
