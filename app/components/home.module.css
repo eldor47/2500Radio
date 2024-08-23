@@ -1,0 +1,9 @@
+.main {
+  margin-bottom: 120px;
+}
+
+.player {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+}

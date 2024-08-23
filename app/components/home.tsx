@@ -1,15 +1,14 @@
 "use client";
 import Image from "next/image";
-import styles from "./page.module.css";
-import MediaCard from "./components/MediaCard";
-import PlayerFooter from "./components/PlayerFooter";
-import { useQuery } from "@tanstack/react-query";
+import styles from "./home.module.css";
+import MediaCard from "./MediaCard";
+import PlayerFooter from "./PlayerFooter";
 
 const empty = {
   trackname: "",
   tracklink: "",
   trackimg: "",
-};
+} as Track;
 
 export default function Home({ data }: { data: any }) {
   return (

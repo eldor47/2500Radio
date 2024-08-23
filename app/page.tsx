@@ -1,15 +1,12 @@
 import { sql } from "@vercel/postgres";
 import { ReactQueryProvider } from "./providers/ReactQueryProvider";
-import Home from "./home";
+import Home from "./components/home";
 
-// Need call to get track list info
-// getTrackList
-
+// Gets track list from pg database
 async function fetchData() {
-  // Fake fetch
   const res = await sql`select * from tracks`;
   console.log(res.rows);
-  return res.rows;
+  return res.rows[0];
 }
 
 export default async function Page() {
