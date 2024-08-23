@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import styles from "./Home.module.css";
+import styles from "./home.module.css";
 import MediaCard from "./MediaCard";
 import PlayerFooter from "./PlayerFooter";
 import { useContext, useState } from "react";

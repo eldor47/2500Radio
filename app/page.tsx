@@ -1,7 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { ReactQueryProvider } from "./providers/ReactQueryProvider";
 import { AudioProvider } from "./providers/AudioProvider";
-import Home from "./components/Home";
+import Home from "./components/home";
 
 // Gets track list from pg database
 async function fetchData() {
