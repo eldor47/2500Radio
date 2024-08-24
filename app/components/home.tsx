@@ -83,7 +83,6 @@ export default function Home({ data }: { data: Array<Track> }) {
     setCurrentTrack(t);
     setCurrentTrackIndex(data.findIndex((a) => a.id === t.id));
     handleTrackChange(t.tracklink);
-    playAudio();
   };
 
   return (
