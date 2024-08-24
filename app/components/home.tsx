@@ -145,9 +145,7 @@ export default function Home({ data }: { data: Array<Track> }) {
           }}
         >
           <div>
-            <h1 style={{ fontSize: "1.8em" }}>
-              Kanye West Love Lockdown Kendrick Lamar The Recipe
-            </h1>
+            <h1 style={{ fontSize: "1.8em" }}>{currentTrack.trackname}</h1>
             <p style={{ color: "darkgray" }}>By Jesse Anthony</p>
           </div>
           <div
