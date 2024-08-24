@@ -98,8 +98,6 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
 
       // Update the audio source and load the new track
       setAudioUrl(url);
-      audioElement.src = url;
-      audioElement.load();
 
       // Wait until the new track is ready to play
       const handleCanPlayThrough = () => {
@@ -107,6 +105,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
           "canplaythrough",
           handleCanPlayThrough
         );
+        audioElement.preload = "auto";
         audioElement.play().catch((error) => {
           // Handle potential errors (e.g., user interaction required)
           console.error("Playback error:", error);
@@ -117,6 +116,8 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
       };
 
       audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
+      audioElement.src = url;
+      audioElement.load();
     }
   };
 

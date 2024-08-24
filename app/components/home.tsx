@@ -83,6 +83,7 @@ export default function Home({ data }: { data: Array<Track> }) {
     setCurrentTrack(t);
     setCurrentTrackIndex(data.findIndex((a) => a.id === t.id));
     handleTrackChange(t.tracklink);
+    playAudio();
   };
 
   return (
@@ -132,7 +133,8 @@ export default function Home({ data }: { data: Array<Track> }) {
         <div
           style={{
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            gap: "1em",
             flexDirection: "row",
             padding: "10px",
           }}
