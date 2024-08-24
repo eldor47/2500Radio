@@ -72,13 +72,6 @@ export default function Home({ data }: { data: Array<Track> }) {
     onTrackEnd(handleTrackEnd);
   }, [currentTrack, onTrackEnd]);
 
-  // Play track on load in
-  useEffect(() => {
-    if (data) {
-      playAudio();
-    }
-  }, [data]);
-
   const playNextTrack = () => {
     if (currentTrackIndex + 1 < data.length) {
       selectTrack(data[currentTrackIndex + 1]);
