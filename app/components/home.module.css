@@ -7,3 +7,20 @@
 	flex-direction: column;
 	justify-content: flex-start;
 }
+
+.spinner {
+  display: inline-block;
+  cursor: pointer; /* Optional: Indicates the image is clickable */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Optional: Define the size of the container if needed */
+	height: 50vh;
+	width: 100%;
+}
+
+.spinner-image {
+  /* Ensures the rotation happens around the center of the image */
+  display: block;
+  margin: 0;
+}

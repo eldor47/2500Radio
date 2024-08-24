@@ -8,6 +8,15 @@
   overflow: hidden;
 }
 
+.mediaCard:hover {
+  background-color: #0c0c0c; /* Optional hover effect */
+}
+
+.mediaCard.selected {
+  background-color: #0c0c0d; /* Selected background color */
+  color: #fff; /* Optional: Change text color when selected */
+}
+
 .image {
   border-radius: 10px;
   object-fit: cover;

@@ -1,12 +1,11 @@
-// context/AudioProvider.tsx
 "use client";
-// context/AudioProvider.tsx
 import React, {
   createContext,
   useState,
   useRef,
   ReactNode,
   useEffect,
+  useCallback,
 } from "react";
 
 interface AudioContextProps {
@@ -21,11 +20,13 @@ interface AudioContextProps {
   volume: number;
   setVolume: (volume: number) => void;
   audioRef: React.RefObject<HTMLAudioElement>;
+  changeTrack: (url: string) => void;
+  onTrackEnd: (callback: () => void) => void; // New function to register a track end callback
 }
 
 interface AudioProviderProps {
   children: ReactNode;
-  audioUrl: string; // Accept audio URL as a prop
+  initialAudioUrl: string;
 }
 
 export const AudioContext = createContext<AudioContextProps | undefined>(
@@ -34,15 +35,17 @@ export const AudioContext = createContext<AudioContextProps | undefined>(
 
 export const AudioProvider: React.FC<AudioProviderProps> = ({
   children,
-  audioUrl,
+  initialAudioUrl,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1); // Volume range is from 0.0 to 1.0
+  const [volume, setVolume] = useState(1);
+  const [audioUrl, setAudioUrl] = useState(initialAudioUrl);
 
   const audioRef = useRef<HTMLAudioElement>(null);
+  const trackEndCallbackRef = useRef<() => void>(() => {});
 
   const playAudio = () => {
     if (audioRef.current) {
@@ -83,10 +86,53 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
     }
   };
 
+  const changeTrack = (url: string) => {
+    if (audioRef.current) {
+      const audioElement = audioRef.current;
+
+      // Stop and reset the audio
+      audioElement.pause();
+      audioElement.currentTime = 0;
+      setIsPlaying(false);
+      setIsPaused(true);
+
+      // Update the audio source and load the new track
+      setAudioUrl(url);
+      audioElement.src = url;
+      audioElement.load();
+
+      // Wait until the new track is ready to play
+      const handleCanPlayThrough = () => {
+        audioElement.removeEventListener(
+          "canplaythrough",
+          handleCanPlayThrough
+        );
+        audioElement.play().catch((error) => {
+          // Handle potential errors (e.g., user interaction required)
+          console.error("Playback error:", error);
+        });
+        setCurrentTime(0);
+        setIsPlaying(true);
+        setIsPaused(false);
+      };
+
+      audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
+    }
+  };
+
+  const onTrackEnd = useCallback((callback: () => void) => {
+    trackEndCallbackRef.current = callback;
+  }, []);
+
   useEffect(() => {
     const handleTimeUpdate = () => {
       if (audioRef.current) {
         setCurrentTime(audioRef.current.currentTime);
+
+        // Check if the track has ended
+        if (audioRef.current.currentTime === audioRef.current.duration) {
+          trackEndCallbackRef.current();
+        }
       }
     };
 
@@ -120,6 +166,8 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
         volume,
         setVolume: adjustVolume,
         audioRef,
+        changeTrack,
+        onTrackEnd, // Provide the onTrackEnd function in the context
       }}
     >
       {/* Hidden audio element with dynamic src */}

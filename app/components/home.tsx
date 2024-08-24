@@ -3,17 +3,24 @@ import Image from "next/image";
 import styles from "./home.module.css";
 import MediaCard from "./MediaCard";
 import PlayerFooter from "./PlayerFooter";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AudioContext } from "../providers/AudioProvider";
+import { motion } from "framer-motion";
+import ButtonImage from "./ButtonImage";
 
 const empty = {
   trackname: "",
   tracklink: "",
   trackimg: "",
+  id: 0,
 } as Track;
 
-export default function Home({ data }: { data: any }) {
+export default function Home({ data }: { data: Array<Track> }) {
   const context = useContext(AudioContext);
+
+  // Set first as base track
+  const [currentTrack, setCurrentTrack] = useState<Track>(data[0]);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(0);
 
   if (!context) {
     throw new Error("AudioContext must be used within an AudioProvider");
@@ -29,44 +36,64 @@ export default function Home({ data }: { data: any }) {
     duration,
     volume,
     setVolume,
+    changeTrack,
+    onTrackEnd,
   } = context;
 
-  const [localVolume, setLocalVolume] = useState(volume);
+  // Change track with context
+  const handleTrackChange = (tracklink: string) => {
+    const newTrackUrl = tracklink;
+    changeTrack(newTrackUrl);
+  };
 
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    setLocalVolume(newVolume);
-    setVolume(newVolume);
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2, // 0.2 seconds delay between each child
+      },
+    },
+  };
+
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
+
+  // Subscribe to the onTrackEnd event
+  useEffect(() => {
+    const handleTrackEnd = () => {
+      console.log(`Track "${currentTrack.trackname}" has ended.`);
+      // play next track
+      playNextTrack();
+    };
+
+    onTrackEnd(handleTrackEnd);
+  }, [currentTrack, onTrackEnd]);
+
+  // Play track on load in
+  useEffect(() => {
+    if (data) {
+      playAudio();
+    }
+  }, [data]);
+
+  const playNextTrack = () => {
+    if (currentTrackIndex + 1 < data.length) {
+      selectTrack(data[currentTrackIndex + 1]);
+    }
+  };
+
+  const selectTrack = (t: Track) => {
+    // change track song
+    setCurrentTrack(t);
+    setCurrentTrackIndex(data.findIndex((a) => a.id === t.id));
+    handleTrackChange(t.tracklink);
   };
 
   return (
     <main className={styles.main}>
-      <div>
-        <p>Current Time: {currentTime.toFixed(2)}</p>
-        <p>Duration: {duration.toFixed(2)}</p>
-        <button onClick={playAudio} disabled={isPlaying}>
-          Play
-        </button>
-        <button onClick={pauseAudio} disabled={!isPlaying}>
-          Pause
-        </button>
-        <button onClick={stopAudio}>Stop</button>
-        <button onClick={() => seek(currentTime + 10)}>Seek +10s</button>
-
-        <div>
-          <label htmlFor="volume">Volume:</label>
-          <input
-            id="volume"
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={localVolume}
-            onChange={handleVolumeChange}
-          />
-          <span>{(localVolume * 100).toFixed(0)}%</span>
-        </div>
-      </div>
       <header style={{ height: "55px" }}>
         <Image
           src="/images/logo-transparent.png"
@@ -76,16 +103,39 @@ export default function Home({ data }: { data: any }) {
         />
       </header>
       <div className={styles.player}>
-        <div
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
           style={{
             height: "50vh",
             width: "100%",
-            backgroundImage: `url(${data ? data?.trackimg : ""})`,
+            backgroundImage: `url(${currentTrack.trackimg})`,
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
           }}
-        ></div>
+        >
+          <motion.div
+            className={styles.spinner}
+            initial={{ rotate: 0 }}
+            animate={{ rotate: isPlaying ? 360 : 0 }}
+            transition={{
+              repeat: isPlaying ? Infinity : 0,
+              repeatType: "loop",
+              duration: 2,
+              ease: "linear",
+            }}
+          >
+            <Image
+              src="/images/logo-transparent.png"
+              alt="Spinner Logo"
+              width={100}
+              height={100}
+              className={styles.spinnerImage}
+            />
+          </motion.div>
+        </motion.div>
         <div
           style={{
             display: "flex",
@@ -109,23 +159,35 @@ export default function Home({ data }: { data: any }) {
               alignItems: "center",
             }}
           >
-            <Image
-              src="/images/play-circle-outline.svg"
-              alt="Play Circle"
-              width={50}
-              height={50}
-            />
-            <Image
+            {isPlaying ? (
+              <ButtonImage
+                src="/images/pause-circle-outline.svg"
+                alt="Pause Circle"
+                width={50}
+                height={50}
+                onClick={pauseAudio}
+              />
+            ) : (
+              <ButtonImage
+                src="/images/play-circle-outline.svg"
+                alt="Play Circle"
+                width={50}
+                height={50}
+                onClick={playAudio}
+              />
+            )}
+            <ButtonImage
               src="/images/cloud-download-outline.svg"
               alt="Download Song"
               width={40}
               height={40}
+              onClick={() => window.open(currentTrack.tracklink, "_blank")}
             />
           </div>
         </div>
 
         {/* Track List */}
-        <div
+        <motion.div
           style={{
             display: "flex",
             flexDirection: "column",
@@ -133,11 +195,22 @@ export default function Home({ data }: { data: any }) {
             marginTop: "10px",
             padding: "10px",
           }}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="show"
         >
-          <MediaCard></MediaCard>
-          <MediaCard></MediaCard>
-          <MediaCard></MediaCard>
-        </div>
+          {data.map((t: Track, index: number) => {
+            return (
+              <motion.div key={index} variants={fadeIn}>
+                <MediaCard
+                  track={t}
+                  selected={currentTrack.id === t.id}
+                  selectTrack={selectTrack}
+                />
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </div>
 
       {/* Footer */}
@@ -151,7 +224,10 @@ export default function Home({ data }: { data: any }) {
           width: "100%",
         }}
       >
-        <PlayerFooter currentTrack={data ?? empty}></PlayerFooter>
+        <PlayerFooter
+          currentTrack={currentTrack ?? empty}
+          skipTrack={playNextTrack}
+        ></PlayerFooter>
         <div
           style={{
             display: "flex",
@@ -162,29 +238,44 @@ export default function Home({ data }: { data: any }) {
             height: "50px",
           }}
         >
-          <Image
+          <ButtonImage
             src="/images/logo/logo-instagram.svg"
             alt="Instagram"
             width={35}
             height={35}
+            onClick={() => {
+              window.open("https://www.instagram.com/jesseanthony", "_blank");
+            }}
           />
-          <Image
+          <ButtonImage
             src="/images/logo/logo-soundcloud.svg"
             alt="Soundcloud"
             width={35}
             height={35}
+            onClick={() => {
+              window.open("https://soundcloud.com/2500xo", "_blank");
+            }}
           />
-          <Image
+          <ButtonImage
             src="/images/logo/logo-tiktok.svg"
             alt="TikTok"
             width={35}
             height={35}
+            onClick={() => {
+              window.open(
+                "https://www.tiktok.com/@jesseanthony_?lang=en",
+                "_blank"
+              );
+            }}
           />
-          <Image
+          <ButtonImage
             src="/images/logo/logo-youtube.svg"
             alt="Youtube"
             width={35}
             height={35}
+            onClick={() => {
+              window.open("https://kick.com/jesseanthony", "_blank");
+            }}
           />
         </div>
       </div>

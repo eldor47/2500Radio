@@ -1,7 +1,17 @@
 import Image from "next/image";
 import styles from "./PlayerFooter.module.css";
+import { useContext } from "react";
+import { AudioContext } from "../providers/AudioProvider";
+import ButtonImage from "./ButtonImage";
 
-const PlayerFooter = (props: { currentTrack: Track }) => {
+const PlayerFooter = (props: { currentTrack: Track; skipTrack: Function }) => {
+  const context = useContext(AudioContext);
+  if (!context) {
+    throw new Error("AudioContext must be used within an AudioProvider");
+  }
+
+  const { isPlaying, playAudio, pauseAudio } = context;
+
   return (
     <div className={styles.mediaCard}>
       <Image
@@ -23,17 +33,29 @@ const PlayerFooter = (props: { currentTrack: Track }) => {
           gap: "15px",
         }}
       >
-        <Image
-          src="/images/play-circle-outline.svg"
-          alt="Play Circle"
-          width={33}
-          height={33}
-        />
-        <Image
+        {isPlaying ? (
+          <ButtonImage
+            src="/images/pause-circle-outline.svg"
+            alt="Pause Circle"
+            width={40}
+            height={40}
+            onClick={pauseAudio}
+          />
+        ) : (
+          <ButtonImage
+            src="/images/play-circle-outline.svg"
+            alt="Play Circle"
+            width={40}
+            height={40}
+            onClick={playAudio}
+          />
+        )}
+        <ButtonImage
           src="/images/play-forward-outline.svg"
           alt="Skip Track"
-          width={33}
-          height={33}
+          width={40}
+          height={40}
+          onClick={() => props.skipTrack()}
         />
       </div>
     </div>

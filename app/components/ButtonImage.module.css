@@ -1,0 +1,15 @@
+.buttonImage {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.buttonImage:focus {
+  outline-offset: 4px;
+}
+
+.buttonImage img {
+  display: block;
+}

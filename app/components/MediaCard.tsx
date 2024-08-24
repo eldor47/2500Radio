@@ -1,22 +1,47 @@
-import Image from 'next/image';
-import styles from './MediaCard.module.css';
+import Image from "next/image";
+import styles from "./MediaCard.module.css";
+import { useState } from "react";
+import { motion } from "framer-motion";
 
-const MediaCard = () => {
+const MediaCard = ({
+  track,
+  selected,
+  selectTrack,
+}: {
+  track: Track;
+  selected: boolean;
+  selectTrack: Function;
+}) => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsClicked(!isClicked);
+    selectTrack(track);
+  };
+
   return (
-    <div className={styles.mediaCard}>
-      <Image 
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAIAAAACDbGyAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH1gIDEAoQm7jyggAAAAh0RVh0Q29tbWVudAD2zJa/AAAAFElEQVR42mP8//8/AxJgYkAFpPIB6vYDB8ciUl8AAAAASUVORK5CYII=" 
-        alt="Album Art" 
-        width={100} 
-        height={100} 
-        className={styles.image} 
-      />
-      <div className={styles.mediaInfo}>
-        <h4>You Look Lonely I Can Fix That, Lord Fubu</h4>
-        <p>Never Leave You Lonely.mp3</p>
-        <span>adilet otorbaev • 2M plays • 2:14 • 2y</span>
+    <motion.div
+      onClick={handleClick}
+      className={`${styles.mediaCard} ${selected ? styles.selected : ""}`}
+      initial={{ scale: 1 }}
+      animate={{ scale: isClicked ? 1.02 : 1 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
+      <div>
+        <Image
+          src={track.trackimg}
+          alt="Album Art"
+          width={100}
+          height={100}
+          className={styles.image}
+        />
       </div>
-    </div>
+      <div className={styles.mediaInfo}>
+        <h4>{track.trackname}</h4>
+        <p>Mixed by Jesse Anthony</p>
+        <span>archives playlist • 2024 • </span>
+      </div>
+    </motion.div>
   );
 };
 
