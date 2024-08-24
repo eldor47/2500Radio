@@ -96,28 +96,31 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
       setIsPlaying(false);
       setIsPaused(true);
 
-      // Update the audio source and load the new track
+      // Update the audio source
       setAudioUrl(url);
+      audioElement.src = url;
 
-      // Wait until the new track is ready to play
-      const handleCanPlayThrough = () => {
-        audioElement.removeEventListener(
-          "canplaythrough",
-          handleCanPlayThrough
-        );
-        audioElement.preload = "auto";
-        audioElement.play().catch((error) => {
-          // Handle potential errors (e.g., user interaction required)
-          console.error("Playback error:", error);
-        });
-        setCurrentTime(0);
-        setIsPlaying(true);
-        setIsPaused(false);
+      // Load the new audio source
+      audioElement.load();
+
+      // Wait for the audio to be ready to play
+      const handleLoadedData = () => {
+        audioElement.removeEventListener("loadeddata", handleLoadedData);
+
+        // Attempt to play the audio
+        audioElement
+          .play()
+          .then(() => {
+            setCurrentTime(0);
+            setIsPlaying(true);
+            setIsPaused(false);
+          })
+          .catch((error) => {
+            console.error("Playback error:", error);
+          });
       };
 
-      audioElement.addEventListener("canplaythrough", handleCanPlayThrough);
-      audioElement.src = url;
-      audioElement.load();
+      audioElement.addEventListener("loadeddata", handleLoadedData);
     }
   };
 
