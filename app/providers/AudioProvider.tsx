@@ -90,34 +90,36 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
     if (audioRef.current) {
       const audioElement = audioRef.current;
 
-      // Stop and reset the audio
+      // Stop and reset the current audio
       audioElement.pause();
       audioElement.currentTime = 0;
       setIsPlaying(false);
       setIsPaused(true);
 
-      // Update the audio source
+      // Update the audio source and load the new track
       setAudioUrl(url);
       audioElement.src = url;
-
-      // Load the new audio source
       audioElement.load();
 
-      // Wait for the audio to be ready to play
+      const handlePlay = () => {
+        setCurrentTime(0);
+        setIsPlaying(true);
+        setIsPaused(false);
+      };
+
+      const handlePlaybackError = (error: any) => {
+        console.error("Playback error:", error);
+        // Fallback: if playback fails, you could prompt the user to tap to play
+        alert(
+          "Playback was interrupted. Please tap the play button to resume."
+        );
+      };
+
       const handleLoadedData = () => {
         audioElement.removeEventListener("loadeddata", handleLoadedData);
 
-        // Attempt to play the audio
-        audioElement
-          .play()
-          .then(() => {
-            setCurrentTime(0);
-            setIsPlaying(true);
-            setIsPaused(false);
-          })
-          .catch((error) => {
-            console.error("Playback error:", error);
-          });
+        // Attempt to play the audio after it's loaded
+        audioElement.play().then(handlePlay).catch(handlePlaybackError);
       };
 
       audioElement.addEventListener("loadeddata", handleLoadedData);
