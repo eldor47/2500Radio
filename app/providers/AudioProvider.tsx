@@ -177,7 +177,7 @@ export const AudioProvider: React.FC<AudioProviderProps> = ({
       }}
     >
       {/* Hidden audio element with dynamic src */}
-      <audio ref={audioRef} src={audioUrl} preload="auto" />
+      <audio ref={audioRef} src={audioUrl} preload="auto" autoPlay={true} />
       {children}
     </AudioContext.Provider>
   );
